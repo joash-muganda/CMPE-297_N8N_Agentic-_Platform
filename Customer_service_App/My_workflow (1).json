@@ -1,0 +1,578 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "search",
+        "query": "in:#hundhweya-customer-service \":ticket:\"",
+        "limit": 1,
+        "options": {}
+      },
+      "id": "902c795f-0727-49d5-acc9-0eeeca9aa870",
+      "name": "Slack",
+      "type": "n8n-nodes-base.slack",
+      "position": [
+        -1000,
+        4040
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "leL7KIONBl86dZEF",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "887c64ca-f391-4a90-9147-7db7665aa63f",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -100,
+        4460
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "a372HaAX78m5Y1HA",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": { \"type\": \"string\" },\n    \"summary\": { \"type\": \"string\" },\n    \"ideas\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" }\n    },\n    \"priority\": { \"type\": \"string\" }\n  }\n}"
+      },
+      "id": "83a8b5fb-d07e-4e14-a4fc-fecaf65bf7a1",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        280,
+        4360
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "id": "7795cd93-5485-4d2b-a59d-f07b30d7a746",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -1192,
+        4047
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "## 1. Query Slack for Messages\n\nSlack API search uses the same search syntax found in the app. Here, we'll use it to filter the latest messages with the ticket emoji within our designated channel called #n8n-tickets. ",
+        "height": 427.09547550768553,
+        "width": 896.2147747910369,
+        "color": 7
+      },
+      "id": "f721e57a-5e27-4ff0-9ab9-c069a707f89a",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1240,
+        3840
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 2 Use AI to Generate Ticket Contents\n\n\nFor this demo, we've instructed the AI to do the following:\n* Generate a descriptive title of the issue\n* Summarise the user message into an actionable request.\n* Determine a prority based on tone and context of the user message. \n* Can offer possible fixes through use of tools or RAG. (not implemented)\n",
+        "height": 578.3950618708791,
+        "width": 530.6864600881105,
+        "color": 7
+      },
+      "id": "2d83c66f-4e63-4e01-b205-966fa83532e0",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -40,
+        3800
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 3 Create New Ticket in Airtble\n\n\nWith our ticket contents generated, we can now create our ticket in Airable for support to handle.\n",
+        "height": 470.1538757655471,
+        "width": 430.3529413885524,
+        "color": 7
+      },
+      "id": "ee8f33ea-18b9-4a38-8971-5af517716840",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        500,
+        3900
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n🚨**Required**\n* Set the Slack channel to monitor here.",
+        "height": 296.735132421306,
+        "width": 204.96868508214473
+      },
+      "id": "18999651-b1ea-4a53-b55c-c29e8c6a044f",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1040,
+        4020
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+        "height": 201.86703187034982,
+        "width": 176.9552515405457
+      },
+      "id": "49d0681f-d7d0-41f8-87fc-bb4174411044",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        620,
+        4080
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appINfEcIdK4hhXch",
+          "mode": "list",
+          "cachedResultName": "Hundhweya",
+          "cachedResultUrl": "https://airtable.com/appINfEcIdK4hhXch"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl20ladSJ2fIFbUX",
+          "mode": "list",
+          "cachedResultName": "Tickets",
+          "cachedResultUrl": "https://airtable.com/appINfEcIdK4hhXch/tbl20ladSJ2fIFbUX"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.output.title }}",
+            "Description": "={{ $json.output.summary }}",
+            "Resolution notes": "=",
+            "Status": "In Progress",
+            "Priority": "={{ $json.output.priority === 'high' ? 'High' : $json.output.priority === 'medium' ? 'Medium' : 'Low' }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Open",
+                  "value": "Open"
+                },
+                {
+                  "name": "In Progress",
+                  "value": "In Progress"
+                },
+                {
+                  "name": "Closed",
+                  "value": "Closed"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Low",
+                  "value": "Low"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "High",
+                  "value": "High"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Submitted by",
+              "displayName": "Submitted by",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Created time",
+              "displayName": "Created time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Resolution notes",
+              "displayName": "Resolution notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status last changed",
+              "displayName": "Status last changed",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Closed at",
+              "displayName": "Closed at",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Days to close",
+              "displayName": "Days to close",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Days until SLA breach",
+              "displayName": "Days until SLA breach",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Days over SLA",
+              "displayName": "Days over SLA",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1e6cf01e-2338-482a-a668-3f36b4b31640",
+      "name": "Airtable1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        4120
+      ],
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "titLCCaherE0do8V",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d3cf3927-b136-4872-9c93-28f448f9a483",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "object"
+            },
+            {
+              "id": "fca76cd2-e589-4f0d-b083-c3457b8bdc5f",
+              "name": "output.summary",
+              "value": "={{ $json.output.summary }}",
+              "type": "string"
+            },
+            {
+              "id": "3b0ddb4d-c624-4f78-adcc-467b3713679c",
+              "name": "output.ideas",
+              "value": "={{ $json.output.ideas }}",
+              "type": "array"
+            },
+            {
+              "id": "11d5fb9d-828c-4fe6-bc78-b1f420e72892",
+              "name": "output.ideas",
+              "value": "={{ $json.output.ideas }}",
+              "type": "array"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "10c8ce71-d9a1-43d5-95fa-7cc48776c26e",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        4560
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "hundhweya-customer-service",
+          "mode": "name"
+        },
+        "text": "=textTitle: {{ $json.output.title || 'No Title' }}\nSummary: {{ $json.output.summary || 'No Summary' }}\nIdeas:\n1. {{ $json.output.ideas[0] || 'No suggestion provided' }}\n2. {{ $json.output.ideas[1] || 'No suggestion provided' }}\n3. {{ $json.output.ideas[2] || 'No suggestion provided' }}\nPriority: {{ $json.output.priority || 'low' }}\n\n_Automated with this n8n workflow_\n",
+        "otherOptions": {}
+      },
+      "id": "c333e4b1-13bc-4d2d-9ac0-679d251ca0ea",
+      "name": "Slack1",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        4480
+      ],
+      "webhookId": "73acb31e-f685-473b-a664-28f95d0a1f8f",
+      "executeOnce": true,
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "leL7KIONBl86dZEF",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a customer service ticket creator. Your task is to create a support ticket based ONLY on the exact message content below, ignoring any automated text or metadata:\n---\n{{ $json[\"text\"].split(\"Automated with this n8n workflow\")[0].replace(':ticket:', '').trim() }}\n---\nRespond ONLY with a JSON object in the following format:\n```json\n{\n  \"title\": \"<Short descriptive title for the support ticket>\",\n  \"summary\": \"<Key expectations and steps taken to reach the conclusion>\",\n  \"ideas\": [\"<Debug or resolution suggestion 1>\", \"<Debug or resolution suggestion 2>\", \"<Debug or resolution suggestion 3>\"],\n  \"priority\": \"<low, medium, high, or urgent>\"\n}\n",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "type": "AIMessagePromptTemplate",
+              "message": "={{$json[\"text\"].split(\"Automated with this n8n workflow\")[0].replace(':ticket:', '').trim()}}\n"
+            }
+          ]
+        }
+      },
+      "id": "97f84fa7-53da-4066-8249-aec13d16fe21",
+      "name": "Generate Ticket Using ChatGPT",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        100,
+        4040
+      ],
+      "typeVersion": 1.4
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Ticket Using ChatGPT",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Slack1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Ticket Using ChatGPT",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack": {
+      "main": [
+        [
+          {
+            "node": "Generate Ticket Using ChatGPT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Ticket Using ChatGPT": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5e4210a5-68a5-4370-966e-680bb1b06083",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bf1dd5b87d365a0262fbb6d7603d672b8dd6133c1e000fa85a57e6af595e21c0"
+  },
+  "id": "CVaIKZiW3KcmhOel",
+  "tags": []
+}
