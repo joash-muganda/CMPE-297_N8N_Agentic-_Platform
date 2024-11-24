@@ -1,0 +1,220 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"model\": \"gpt-4\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are an assistant. Respond to user queries to the best of your ability.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"{{$json['query']}}\"\n    }\n  ],\n  \"temperature\": 0.7\n}\n",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "00c64cf3-90fc-4d1f-b145-c4a496a54d3a",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        80
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "iRODJTJxKkPbFExB",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e40ccec1-9be2-4e01-befd-8ff03c24d1b2",
+              "leftValue": "={{$json[\"choices\"][0][\"message\"][\"content\"]}}\n",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "78f9c3d9-becf-4f5f-b839-88ebcd966d9a",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        280,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "channel",
+        "operation": "setTopic",
+        "channelId": {
+          "__rl": true,
+          "value": "C081QLQ4TRA",
+          "mode": "list",
+          "cachedResultName": "hundhweya-customer-service"
+        },
+        "topic": "=AI Response: {{$json[\"choices\"][0][\"message\"][\"content\"].slice(0, 150) || \"No response provided\"}}\n"
+      },
+      "id": "3b70e258-df95-4b53-9da9-d9a3576cfcf7",
+      "name": "Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        620,
+        360
+      ],
+      "webhookId": "8cc5a96c-97b9-499f-9516-0ea9cfeccc77",
+      "credentials": {
+        "slackApi": {
+          "id": "fpgWVdmhujXM0sLc",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a984d780-3c22-45b4-9088-ac0f73f2ad66",
+        "options": {}
+      },
+      "id": "f83a53d4-87ea-42d9-a0af-17063d285a97",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        720,
+        100
+      ],
+      "webhookId": "a984d780-3c22-45b4-9088-ac0f73f2ad66"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "aac13b18-065d-412d-bb46-7c1ef6da7a55",
+      "name": "format",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "id": "6e913c15-c38d-430b-90a0-8f96f0a02900",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        360
+      ],
+      "webhookId": "d8a3b2da-2f64-4973-810e-343c9c6fe418"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5da08228-de8d-4aac-a786-85272f05bd1d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1e1cc0685f218ef8258e000c7b35c755aa04808cad580e9ffdbcfeaee9e0cf04"
+  },
+  "id": "VQekUbGsFZGqTLZA",
+  "tags": []
+}
