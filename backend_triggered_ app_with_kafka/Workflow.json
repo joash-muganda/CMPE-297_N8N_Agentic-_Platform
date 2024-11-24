@@ -1,0 +1,107 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "topic": "my_topic",
+        "groupId": "n8n-kafka-group",
+        "options": {}
+      },
+      "id": "8f09f9ad-4e56-42cc-ab20-06e26d791c75",
+      "name": "Kafka Trigger",
+      "type": "n8n-nodes-base.kafkaTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        280
+      ],
+      "credentials": {
+        "kafka": {
+          "id": "4KobMneE0SrmCyWo",
+          "name": "Kafka account "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const message = items[0].json.message;\nconsole.log(`Received message: ${message}`);\nreturn items;\n"
+      },
+      "id": "101db782-888a-4efb-871d-48e51f8eab07",
+      "name": "Log Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        580,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "joash.muganda@gmail.com",
+        "toEmail": "joashmuganda@gmail.com",
+        "subject": "New Kafka Message Received",
+        "html": "=You have received a new message from Kafka: {{$json[\"message\"]}}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "cb8329af-bc60-4653-afd9-d9fa5c553061",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        760,
+        260
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "smtp": {
+          "id": "NiSU9kiRgmw9WgwX",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Kafka Trigger": {
+      "main": [
+        [
+          {
+            "node": "Log Message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Message": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "63c0dc92-0ecf-4f0e-b206-dc27ca39606b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c53b58c02451c30205f381bbfdab177b8dc72c53d2f82b433393a409ab774d47"
+  },
+  "id": "0EEwVA4WSNOufmby",
+  "tags": []
+}
